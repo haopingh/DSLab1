@@ -1,4 +1,7 @@
+import java.io.Serializable;
 
-public interface MigratableProcesses {
 
+public interface MigratableProcesses extends Runnable, Serializable{
+    void suspend ();
+    String toString();
 }
