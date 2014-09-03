@@ -5,12 +5,10 @@ import java.io.Serializable;
 
 public class TransactionalFileOutputStream extends OutputStream implements Serializable{
 
-	@Override
-	public void write(int b) throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+  @Override
+  public void write(int arg0) throws IOException {
+    // TODO Auto-generated method stub
+    
+  }
 
-	
-	
 }
