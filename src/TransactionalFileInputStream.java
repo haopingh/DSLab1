@@ -5,10 +5,13 @@ import java.io.Serializable;
 
 public class TransactionalFileInputStream extends InputStream implements  Serializable{
 
+  //TransactionalFileInputStream (String args) {
+    
+  //}
   @Override
   public int read() throws IOException {
     // TODO Auto-generated method stub
     return 0;
   }
-
+  
 }
