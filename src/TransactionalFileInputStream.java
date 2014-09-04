@@ -4,19 +4,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-/*
- *  TODO: Sync between read file and migrate thread.   by haoping
- */
 public class TransactionalFileInputStream extends InputStream implements Serializable{
-
 
 	private int offset;
 	private String filename;
 	
 	/* "Cache" the connection in FileInputStream */
-	FileInputStream mInput;
+	private FileInputStream mInput;
+	
 	/* means "safe" when no migration */
-	boolean safe = true;
+	private boolean safe = true;
 	
 	public TransactionalFileInputStream(String fname) {
 		offset = 0;

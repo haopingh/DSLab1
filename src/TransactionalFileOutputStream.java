@@ -10,8 +10,7 @@ import java.io.Serializable;
  */
 public class TransactionalFileOutputStream extends OutputStream implements Serializable{
 
-
-	private int offset;
+  private int offset;
 	private String filename;
 	
 	/* "Cache" the connection in FileInputStream */
