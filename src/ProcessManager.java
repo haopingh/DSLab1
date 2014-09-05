@@ -8,15 +8,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-<<<<<<< HEAD
-public class ProcessManager {
-	
-=======
 public class ProcessManager implements MigrateClient.ThreadFinishListener{
 	/* Server Socket, always waiting for other's connection */
-	private MigrateMatser mServer;
 
->>>>>>> aac64967e996a4ed4b5aa7418c7eb1409e3d25f9
 	/* Port for Listening other connection */
 	private static final int port = 5566;
 
@@ -72,12 +66,11 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 	        Socket otherNodeSocket = new Socket(targetIP, port);
 	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
-<<<<<<< HEAD
+
 	        System.out.println("start transmission");
-=======
+
 	        mClient.setListener(this);
-	        System.out.println("start transmit");
->>>>>>> aac64967e996a4ed4b5aa7418c7eb1409e3d25f9
+
             Thread t = new Thread(mClient);
             t.start();
 		}
