@@ -6,6 +6,8 @@ import java.net.Socket;
 public class MigrateClient implements Runnable {
     private Socket mSocket;
     private MigratableProcess mp;
+    
+    private ThreadFinishListener mListener;
 
     public MigrateClient(Socket s) {
     	mSocket = s;
@@ -14,8 +16,26 @@ public class MigrateClient implements Runnable {
     @Override
     public void run() {
     	
-	try {
-	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
+    	try {
+    	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
+
+    	    System.out.println("MigrateClient:  Start Transmit");
+    	    if (mp != null) {
+    	    	out.writeObject((Object)mp);
+    	    	out.flush();
+    	    	System.out.println("MigrateClient:  Finish Transmit");
+    	    	
+    	    	ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());
+    	    	while(true){
+    	    		Object response = in.readObject();
+    	    		if (response instanceof String && ((String)response).equals("OK")) {
+    	    			System.out.println("Get Process Response: OK");
+    	    			mListener.onThreadFinish(mp);
+    	    			break;
+    	    		}
+    	    	}
+    	    }
+
 
 	    System.out.println("MigrateClient: Start Transmission");
 	    if (mp != null) {
@@ -24,13 +44,20 @@ public class MigrateClient implements Runnable {
 	    	System.out.println("MigrateClient: Finish Transmission");
 	    }
 
-	} catch (Exception e) {
-	    e.printStackTrace();
-	}
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+    	}
+
+
     }
     
     public void setTransmitProcess(MigratableProcess m) {
     	mp = m;
     }
 
+    public interface ThreadFinishListener {
+    	void onThreadFinish(MigratableProcess mp);
+    }
+    
+    public void setListener(ThreadFinishListener l) { mListener = l; }
 }

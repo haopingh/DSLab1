@@ -25,9 +25,16 @@ public class MigrateMasterService implements Runnable {
 	    	Object migratedObj = in.readObject();
 	    	System.out.println("get   " + String.valueOf(migratedObj == null));
 	    	if (migratedObj != null) {
-	    		System.out.println("recieve object");
-	    		Thread t = new Thread((MigratableProcess)migratedObj);
-	    		t.start();
+	    		if (migratedObj instanceof MigratableProcess) {
+	    			System.out.println("recieve object");
+		    		Thread t = new Thread((MigratableProcess)migratedObj);
+		    		t.start();
+		    		
+		    		t.join();
+		    		ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
+		    		out.writeObject("OK");
+		    		out.flush();
+	    		}
 	    	}
 	    }
 
