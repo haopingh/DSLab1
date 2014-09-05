@@ -11,12 +11,12 @@ public class MigrateMasterService implements Runnable {
     private Socket mSocket;
 
     public MigrateMasterService(Socket s) {
-	mSocket = s;
+    	mSocket = s;
     }
 
     @Override
     public void run() {
-    	System.out.println("Service Start Run!!");
+    	System.out.println("Service Running!!");
 	try {
 
 	    ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());

@@ -19,11 +19,11 @@ public class MigrateClient implements Runnable {
     	try {
     	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
 
-    	    System.out.println("MigrateClient:  Start Transmit");
+    	    System.out.println("MigrateClient: Start Transmission");
     	    if (mp != null) {
     	    	out.writeObject((Object)mp);
     	    	out.flush();
-    	    	System.out.println("MigrateClient:  Finish Transmit");
+    	    	System.out.println("MigrateClient: Finish Transmission");
     	    	
     	    	ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());
     	    	while(true){
@@ -36,9 +36,11 @@ public class MigrateClient implements Runnable {
     	    	}
     	    }
 
+
     	} catch (Exception e) {
     	    e.printStackTrace();
     	}
+
 
     }
     

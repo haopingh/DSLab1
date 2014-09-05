@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 
-public class TransactionalFileInputStream extends InputStream implements
-	Serializable {
+public class TransactionalFileInputStream extends InputStream implements Serializable {
 
     private int offset;
     private String filename;
