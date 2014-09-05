@@ -4,6 +4,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /*
  *  TODO: Sync between write file and migrate thread.   by haoping
@@ -31,11 +33,18 @@ public class TransactionalFileOutputStream extends OutputStream implements
 
     @Override
     public void write(int arg0) throws IOException {
-    	
+    	/*
     	if (mOutput == null) {
-    		mOutput = new FileOutputStream(filename);
+    		System.out.println("TransactionFileOutput: reopen");
+    		mOutput = new FileOutputStream(filename, true);
+
     	}
+    	*/
+    	System.out.println("TransactionFileOutput: reopen");
+		mOutput = new FileOutputStream(filename, true);
     	mOutput.write(arg0);
+    	mOutput.flush();
+    	mOutput.close();
 
     	offset++;
     }

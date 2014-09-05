@@ -13,7 +13,7 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 	private MigrateMatser mServer;
 
 	/* Port for Listening other connection */
-	private static final int port = 5566;
+	private static final int port = 5567;
 
 	/*
 	 * Maintain other nodes address (Hard Coded) 187 -> ghc54, 188 -> ghc55

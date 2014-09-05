@@ -34,16 +34,18 @@ public class MigrateMasterService implements Runnable {
 		    		ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
 		    		out.writeObject("OK");
 		    		out.flush();
+		    		
+		    		break;
 	    		}
 	    	}
 	    }
 
 	}
 	catch(IOException e) {
-		System.out.print(e);
+		System.out.print("in" + e);
 	}
 	catch (Exception e) {
-		System.out.println(e);
+		System.out.println("in2" + e);
 	    e.printStackTrace();
 	}
     }
