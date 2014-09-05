@@ -27,7 +27,7 @@ public class ProcessManager {
 	public ProcessManager() {
 		/* Bind Port to this program, so other node can connect to here */
 		try {
-			ServerSocket mServer = new ServerSocket(port);
+			ServerSocket mServer = new ServerSocket(port); //server
 			MigrateMatser mMaster = new MigrateMatser(this, mServer);
 			Thread t = new Thread(mMaster);
 			t.start();
@@ -43,7 +43,7 @@ public class ProcessManager {
 
 	public void launch(MigratableProcess mp) {
 		mpObj.add(mp);
-		migraObj.add(mpObj.size() - 1);
+		migraObj.add(mpObj.size() - 1); //TODO should modify this, should be able to handle adding new process after migration 
 		Thread t = new Thread(mp);
 		t.start();
 	}
@@ -57,8 +57,8 @@ public class ProcessManager {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			int procNum = Integer.parseInt(br.readLine());
+			migraObj.remove(procNum);
 			MigratableProcess m = mpObj.get(procNum);
-			
 			String targetIP = nodeIP[1];
 	        
 	        Socket otherNodeSocket = new Socket(targetIP, port);
@@ -70,7 +70,6 @@ public class ProcessManager {
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	// read command at runtime
@@ -99,7 +98,7 @@ public class ProcessManager {
 				mManager.migrate();
 			} else if (commandArr[0].equals("exit")) {
 				System.exit(0);
-			} else {// instantiate an object
+			} else {// instantiate an object, using reflection in JAVA
 				Class<?> myClass = Class.forName(commandArr[0]);
 				Constructor<?> myCons = myClass.getConstructor(String[].class);
 				Object object = myCons.newInstance((Object) argsArr);
