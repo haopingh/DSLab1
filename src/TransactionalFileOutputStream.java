@@ -8,8 +8,7 @@ import java.io.Serializable;
 /*
  *  TODO: Sync between write file and migrate thread.   by haoping
  */
-public class TransactionalFileOutputStream extends OutputStream implements
-	Serializable {
+public class TransactionalFileOutputStream extends OutputStream implements Serializable {
 
     private int offset;
     private String filename;

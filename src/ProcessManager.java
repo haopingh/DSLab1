@@ -83,8 +83,7 @@ public class ProcessManager {
 			// listen to the system in
 			String command = mManager.readCommand();
 			String[] commandArr = command.split(" ");
-			String[] argsArr = Arrays.copyOfRange(commandArr, 1,
-					commandArr.length);
+			String[] argsArr = Arrays.copyOfRange(commandArr, 1, commandArr.length);
 
 			if (commandArr[0].equals("migrate")) {// run migrate method
 				mManager.migrate();
