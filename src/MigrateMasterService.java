@@ -16,8 +16,7 @@ public class MigrateMasterService implements Runnable {
 	try {
 
 	    DataInputStream in = new DataInputStream(mSocket.getInputStream());
-	    DataOutputStream out = new DataOutputStream(
-		    mSocket.getOutputStream());
+	    DataOutputStream out = new DataOutputStream(mSocket.getOutputStream());
 
 	    while (true) {
 		if (in.read() != -1) {

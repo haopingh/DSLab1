@@ -7,87 +7,93 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ProcessManager {
-	/* Server Socket, always waiting for other's connection */
-	private MigrateMatser mServer;
-	
-	/* Port for Listening other connection */
-	private static final int port = 5566;
-	
-	/* 
-	 * Maintain other nodes address (Hard Coded) 
-	 * 187 -> ghc54, 188 -> ghc55
-	 */
-	private String[] nodeIP = {"128.2.100.187", "128.2.100.188"};
-	
-	/* Data Structure to store existing threads */
-	ArrayList<MigratableProcess> threads;
-	
-	public ProcessManager() {
-		/* Bind Port to this program, so other node can connect to here */
-		try {
-			ServerSocket mServer = new ServerSocket(port);
-			
-			MigrateMatser mMaster = new MigrateMatser(this, mServer);
-			Thread t = new Thread(mMaster);
-			t.start();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		/* Initialize threads management elements */
-		threads = new ArrayList<MigratableProcess>();
+    /* Server Socket, always waiting for other's connection */
+    private MigrateMatser mServer;
+
+    /* Port for Listening other connection */
+    private static final int port = 5566;
+
+    /*
+     * Maintain other nodes address (Hard Coded) 187 -> ghc54, 188 -> ghc55
+     */
+    private String[] nodeIP = { "128.2.100.187", "128.2.100.188" };
+
+    /* Data Structure to store existing threads */
+    ArrayList<MigratableProcess> mpObj;
+    ArrayList<Integer> migraObj;
+
+    public ProcessManager() {
+	/* Bind Port to this program, so other node can connect to here */
+	try {
+	    ServerSocket mServer = new ServerSocket(port);
+	    MigrateMatser mMaster = new MigrateMatser(this, mServer);
+	    Thread t = new Thread(mMaster);
+	    t.start();
+
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-	
-	public void addAndStart(MigratableProcess mp) {
-		threads.add(mp);
-		Thread t = new Thread(mp);
-		t.start();
-	}
-	
-	// migrate method
-    public void migrate() {
-    	// TODO should figure out how to set the flag in
-    	// TransactionFileInput/OutpuStream
+	/* Initialize threads management elements */
+	mpObj = new ArrayList<MigratableProcess>();
+	migraObj = new ArrayList<Integer>();
     }
 
-	
-	/*
-	 * Here Start the Main Program
-	 * The main program has a ProcessManager object to do connection, create process, migrate process...
-	 */
-    public static void main(String[] args) throws Exception{
+    public void launch(MigratableProcess mp) {
+	mpObj.add(mp);
+	migraObj.add(mpObj.size()-1);
+	Thread t = new Thread(mp);
+	t.start();
+    }
 
-    	/* Create ProcessManager object to handle different commands */
-    	ProcessManager mManager = new ProcessManager();
-    	
-    	// listen to the system in
-    	while (true) {
-    	    
-    	    String command = readCommand();
-    	    if (command.equals("migrate")) {// run migrate method
-    	    	mManager.migrate();
-    	    } else if (command.equals("exit")) {
-    	    	System.exit(0);
-    	    } else {//instantiate an object
-    	    	String[] commandArr = command.split(" ");
-    	    	String[] argsArr = Arrays.copyOfRange(commandArr, 1, commandArr.length);
-    	    	Class <?> myClass = Class.forName(commandArr[0]);
-    	    	Constructor <?> myCons = myClass.getConstructor(String[].class);
-    	    	Object object = myCons.newInstance((Object)argsArr);
-    		
-    	    	mManager.addAndStart((MigratableProcess)object);
-    	    }
-    	}
+    // migrate method
+    public void migrate() {
+	System.out.print("Choose which process you want to migrate:");
+	for (int i = 0; i < migraObj.size();i++) System.out.print(" " + migraObj.get(i));
+	System.out.println();
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	try {
+	    int procNum = Integer.parseInt(br.readLine());
+	    migraObj.remove(procNum);
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	
     }
 
     // read command at runtime
-    public static String readCommand() throws Exception {
-    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-    	String a = br.readLine();
-    	return a;
-
+    public String readCommand() throws Exception {
+	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	String a = br.readLine();
+	return a;
     }
 
+    /*
+     * Here Start the Main Program The main program has a ProcessManager object
+     * to do connection, create process, migrate process...
+     */
+    public static void main(String[] args) throws Exception {
+
+	/* Create ProcessManager object to handle different commands */
+	ProcessManager mManager = new ProcessManager();
+	
+	while (true) {
+	    // listen to the system in
+	    String command = mManager.readCommand();
+	    String[] commandArr = command.split(" ");
+	    String[] argsArr = Arrays.copyOfRange(commandArr, 1, commandArr.length);
+	    
+	    if (commandArr[0].equals("migrate")) {// run migrate method
+		mManager.migrate();
+	    } else if (commandArr[0].equals("exit")) {
+		System.exit(0);
+	    } else {// instantiate an object
+		Class<?> myClass = Class.forName(commandArr[0]);
+		Constructor<?> myCons = myClass.getConstructor(String[].class);
+		Object object = myCons.newInstance((Object) argsArr);
+		mManager.launch((MigratableProcess) object);
+	    }
+	}
+    }
 }
