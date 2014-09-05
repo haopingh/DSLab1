@@ -1,9 +1,7 @@
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class MigrateClient implements Runnable {
     private Socket mSocket;
