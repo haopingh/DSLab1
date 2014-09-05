@@ -6,19 +6,22 @@ import java.util.Arrays;
 
 public class ProcessManager {
 
+    
     public static void main(String[] args) throws Exception{
-
+	ProcessManager mp = new ProcessManager();
+	
 	// listen to the system in
 	while (true) {
 	    
-	    String command = readCommand();
+	    String command = mp.readCommand();
 	    if (command.equals("migrate")) {// run migrate method
-		migrate();
+		mp.migrate();
 	    } else if (command.equals("exit")) {
 		System.exit(0);
 	    } else {//instantiate an object
 		String[] commandArr = command.split(" ");
 		String[] argsArr = Arrays.copyOfRange(commandArr, 1, commandArr.length);
+		
 		Class <?> myClass = Class.forName(commandArr[0]);
 		Constructor <?> myCons = myClass.getConstructor(String[].class);
 		Object object = myCons.newInstance((Object)argsArr);
@@ -30,14 +33,14 @@ public class ProcessManager {
     }
 
     // read command at runtime
-    public static String readCommand() throws Exception {
+    public String readCommand() throws Exception {
 	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	String a = br.readLine();
 	return a;
     }
 
     // migrate method
-    public static void migrate() {
+    public void migrate() {
 	// TODO should figure out how to set the flag in
 	// TransactionFileInput/OutpuStream
     }
