@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -50,6 +52,25 @@ public class ProcessManager {
     public void migrate() {
     	// TODO should figure out how to set the flag in
     	// TransactionFileInput/OutpuStream
+    	
+    	/* Find other node's ip and send connection */
+    	/* TODO other better methods */
+    	String targetIP = nodeIP[1];
+    	
+    	try {
+			Socket otherNodeSocket = new Socket(targetIP, port);
+			
+			MigrateClient mClient = new MigrateClient(otherNodeSocket);
+			Thread t = new Thread(mClient);
+			t.start();
+		} catch (UnknownHostException e) {
+			System.out.println("UnknownHost!!!!!");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
 
 	
@@ -65,7 +86,7 @@ public class ProcessManager {
     	// listen to the system in
     	while (true) {
     	    
-    	    String command = readCommand();
+    	    String command = mManager.readCommand();
     	    if (command.equals("migrate")) {// run migrate method
     	    	mManager.migrate();
     	    } else if (command.equals("exit")) {
@@ -83,7 +104,7 @@ public class ProcessManager {
     }
 
     // read command at runtime
-    public static String readCommand() throws Exception {
+    public String readCommand() throws Exception {
     	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     	String a = br.readLine();
     	return a;
