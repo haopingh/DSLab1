@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -55,9 +57,17 @@ public class ProcessManager {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			int procNum = Integer.parseInt(br.readLine());
-			migraObj.remove(procNum);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			MigratableProcess m = mpObj.get(procNum);
+			
+			String targetIP = nodeIP[1];
+	        
+	        Socket otherNodeSocket = new Socket(targetIP, port);
+	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
+	        mClient.setTransmitProcess(m);
+            Thread t = new Thread(mClient);
+            t.start();
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 

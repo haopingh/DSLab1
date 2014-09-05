@@ -1,9 +1,11 @@
-import java.io.PrintWriter;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class MigrateClient implements Runnable {
     private Socket mSocket;
+    private MigratableProcess mp;
 
     public MigrateClient(Socket s) {
 	mSocket = s;
@@ -13,20 +15,23 @@ public class MigrateClient implements Runnable {
     public void run() {
 	try {
 
-	    Scanner in = new Scanner(mSocket.getInputStream());
-	    PrintWriter out = new PrintWriter(mSocket.getOutputStream());
+	    ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());
+	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
 
-	    while (true) {
-		if (in.hasNext()) {
-
-		    String msgIn = in.nextLine();
-
-		}
+	    if (mp != null) {
+	    	out.writeObject((Object)mp);
+	    	out.flush();
+	    	
+	    	mp = null;
 	    }
 
 	} catch (Exception e) {
 	    e.printStackTrace();
 	}
+    }
+    
+    public void setTransmitProcess(MigratableProcess m) {
+    	mp = m;
     }
 
 }
