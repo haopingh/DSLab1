@@ -26,7 +26,7 @@ public class MigrateMasterService implements Runnable {
 	    	System.out.println("get   " + String.valueOf(migratedObj == null));
 	    	if (migratedObj != null) {
 	    		if (migratedObj instanceof MigratableProcess) {
-	    			System.out.println("recieve object");
+	    			System.out.println("receive object");
 		    		Thread t = new Thread((MigratableProcess)migratedObj);
 		    		t.start();
 		    		

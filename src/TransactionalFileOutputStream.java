@@ -34,6 +34,7 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     	}
     	mOutput.write(arg0);
     }
+    
     @Override
 	public void close () throws IOException {
     	mOutput.close();

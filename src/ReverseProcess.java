@@ -22,7 +22,7 @@ public class ReverseProcess extends MigratableProcess{
 	public void run() {
 		PrintStream out = new PrintStream(outFile);
 		DataInputStream in = new DataInputStream(inFile);
-
+		out.println("node starts running");
 		try {
 			while (!suspending) {
 				String line = in.readLine();
@@ -33,7 +33,7 @@ public class ReverseProcess extends MigratableProcess{
 				out.println(new StringBuilder(line).reverse().toString());
 				
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					// ignore it
 				}
