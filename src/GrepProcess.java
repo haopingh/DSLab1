@@ -47,6 +47,13 @@ public class GrepProcess extends MigratableProcess {
 		} catch (IOException e) {
 			System.out.println("GrepProcess: Error: " + e);
 		}
+		try {
+			outFile.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		out.close();
 		suspending = false;
 	}
 

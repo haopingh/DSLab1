@@ -44,6 +44,7 @@ public class AddNoiseProcess extends MigratableProcess {
 		} catch (IOException e) {
 			System.out.println("GrepProcess: Error: " + e);
 		}
+		out.close();
 		suspending = false;
 	}
 

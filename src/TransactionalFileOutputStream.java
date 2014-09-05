@@ -19,7 +19,7 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     	filename = fname;
 
     	try {
-    	    mOutput = new FileOutputStream(filename, true);
+    	    mOutput = new FileOutputStream(filename,true);
     	} catch (FileNotFoundException e) {
     	    // TODO Auto-generated catch block
     	    e.printStackTrace();
@@ -30,9 +30,13 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     public void write(int arg0) throws IOException {
     	
     	if (mOutput == null) {
-    		mOutput = new FileOutputStream(filename);
+    		mOutput = new FileOutputStream(filename, true);
     	}
     	mOutput.write(arg0);
+    }
+    @Override
+	public void close () throws IOException {
+    	mOutput.close();
     }
 
 }
