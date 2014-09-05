@@ -19,6 +19,8 @@ public class MigrateMatser implements Runnable {
     	    try {
     		Socket clientConnect = mServer.accept();
 
+    		System.out.println("MigrateMaster: Get Connection");
+    		
     		MigrateMasterService eachConnection = new MigrateMasterService(
     			clientConnect);
 

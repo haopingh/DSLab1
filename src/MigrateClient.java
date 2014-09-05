@@ -13,16 +13,16 @@ public class MigrateClient implements Runnable {
 
     @Override
     public void run() {
+    	
 	try {
-
-	    ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());
 	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
 
+	    System.out.println("MigrateClient:  Start Transmit");
 	    if (mp != null) {
 	    	out.writeObject((Object)mp);
 	    	out.flush();
-	    	
-	    	mp = null;
+	    	System.out.println("MigrateClient:  Finish Transmit");
+	    	//mp = null;
 	    }
 
 	} catch (Exception e) {
