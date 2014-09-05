@@ -27,6 +27,7 @@ public class TransactionalFileInputStream extends InputStream implements
     @Override
     public int read() throws IOException {
     	if (mInput == null) {
+    		System.out.println("FileInputStream reset! Start new one, with offset: " + offset);
     		mInput = new FileInputStream(filename);
     		mInput.skip(offset);
     	}

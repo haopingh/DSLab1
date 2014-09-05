@@ -57,13 +57,16 @@ public class ProcessManager {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			int procNum = Integer.parseInt(br.readLine());
+			migraObj.remove(procNum);
 			MigratableProcess m = mpObj.get(procNum);
+			m.suspend();
 			
 			String targetIP = nodeIP[1];
 	        
 	        Socket otherNodeSocket = new Socket(targetIP, port);
 	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
+	        System.out.println("start transmit");
             Thread t = new Thread(mClient);
             t.start();
 		}
