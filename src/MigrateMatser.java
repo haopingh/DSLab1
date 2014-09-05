@@ -31,4 +31,6 @@ public class MigrateMatser implements Runnable {
     	}
     }
 
+    public ServerSocket getSocket() { return mServer; }
+    
 }

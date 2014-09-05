@@ -48,12 +48,10 @@ public class ProcessManager {
 	
 	// migrate method
     public void migrate() {
-	// TODO should figure out how to set the flag in
-	// TransactionFileInput/OutpuStream
+    	// TODO should figure out how to set the flag in
+    	// TransactionFileInput/OutpuStream
     }
-	
-	
-	
+
 	
 	/*
 	 * Here Start the Main Program
@@ -86,9 +84,9 @@ public class ProcessManager {
 
     // read command at runtime
     public static String readCommand() throws Exception {
-	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-	String a = br.readLine();
-	return a;
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	String a = br.readLine();
+    	return a;
     }
 
 }
