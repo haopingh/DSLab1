@@ -21,8 +21,7 @@ public class MigrateMatser implements Runnable {
 
     		System.out.println("MigrateMaster: Get Connection");
     		
-    		MigrateMasterService eachConnection = new MigrateMasterService(
-    			clientConnect);
+    		MigrateMasterService eachConnection = new MigrateMasterService(clientConnect);
 
     		Thread connectionThread = new Thread(eachConnection);
     		connectionThread.start();
@@ -31,8 +30,5 @@ public class MigrateMatser implements Runnable {
     		e.printStackTrace();
     	    }
     	}
-    }
-
-    public ServerSocket getSocket() { return mServer; }
-    
+    }  
 }

@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ProcessManager {
-	/* Server Socket, always waiting for other's connection */
-	private MigrateMatser mServer;
-
+	
 	/* Port for Listening other connection */
 	private static final int port = 5566;
 
 	/*
-	 * Maintain other nodes address (Hard Coded) 187 -> ghc54, 188 -> ghc55
+	 * Maintain other nodes address (Hard-coded) 187 -> ghc54, 188 -> ghc55
 	 */
 	private String[] nodeIP = { "128.2.100.187", "128.2.100.188" };
 
@@ -33,7 +31,6 @@ public class ProcessManager {
 			t.start();
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		/* Initialize threads management elements */
@@ -51,9 +48,11 @@ public class ProcessManager {
 	// migrate method
 	public void migrate() {
 		System.out.print("Choose which process you want to migrate:");
+		
 		for (int i = 0; i < migraObj.size(); i++)
 			System.out.print(" " + migraObj.get(i));
 		System.out.println();
+		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			int procNum = Integer.parseInt(br.readLine());
@@ -66,7 +65,7 @@ public class ProcessManager {
 	        Socket otherNodeSocket = new Socket(targetIP, port);
 	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
-	        System.out.println("start transmit");
+	        System.out.println("start transmission");
             Thread t = new Thread(mClient);
             t.start();
 		}

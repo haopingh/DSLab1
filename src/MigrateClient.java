@@ -8,7 +8,7 @@ public class MigrateClient implements Runnable {
     private MigratableProcess mp;
 
     public MigrateClient(Socket s) {
-	mSocket = s;
+    	mSocket = s;
     }
 
     @Override
@@ -17,12 +17,11 @@ public class MigrateClient implements Runnable {
 	try {
 	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
 
-	    System.out.println("MigrateClient:  Start Transmit");
+	    System.out.println("MigrateClient: Start Transmission");
 	    if (mp != null) {
 	    	out.writeObject((Object)mp);
 	    	out.flush();
-	    	System.out.println("MigrateClient:  Finish Transmit");
-	    	//mp = null;
+	    	System.out.println("MigrateClient: Finish Transmission");
 	    }
 
 	} catch (Exception e) {
