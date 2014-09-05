@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ProcessManager {
+public class ProcessManager implements MigrateClient.ThreadFinishListener{
 	/* Server Socket, always waiting for other's connection */
 	private MigrateMatser mServer;
 
@@ -66,6 +66,7 @@ public class ProcessManager {
 	        Socket otherNodeSocket = new Socket(targetIP, port);
 	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
+	        mClient.setListener(this);
 	        System.out.println("start transmit");
             Thread t = new Thread(mClient);
             t.start();
@@ -76,6 +77,17 @@ public class ProcessManager {
 
 	}
 
+	@Override
+	public void onThreadFinish(MigratableProcess mp) {
+		System.out.println("remove a process: " + mp.getClass().toString());
+		
+		mpObj.remove(mp);
+		
+		System.out.println("Current Process: ");
+		for(int i = 0; i < mpObj.size(); i++) 
+			System.out.print(" " + migraObj.get(i));
+	}
+	
 	// read command at runtime
 	public String readCommand() throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -111,4 +123,5 @@ public class ProcessManager {
 			}
 		}
 	}
+
 }
