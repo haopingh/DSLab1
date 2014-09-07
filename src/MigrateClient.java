@@ -40,8 +40,6 @@ public class MigrateClient implements Runnable {
     	} catch (Exception e) {
     	    e.printStackTrace();
     	}
-
-
     }
     
     public void setTransmitProcess(MigratableProcess m) {
