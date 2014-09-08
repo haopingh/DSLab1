@@ -13,6 +13,7 @@ public class AddNoiseProcess extends MigratableProcess {
 			System.out.println("usage: AddNoiseProcess <Noise> <inputFile> <outputFile>");
 			throw new Exception("Invalid Arguments");
 		}
+		name = "AddNoiseProcess " + args[0] + " " + args[1] + " " + args[2];
 		noise = args[0];
 		inFile = new TransactionalFileInputStream(args[1]);
 		outFile = new TransactionalFileOutputStream(args[2]);
@@ -22,7 +23,7 @@ public class AddNoiseProcess extends MigratableProcess {
 	public void run() {
 		PrintStream out = new PrintStream(outFile);
 		DataInputStream in = new DataInputStream(inFile);
-
+		out.println("node starts running");
 		try {
 			while (!suspending) {
 				String line = in.readLine();
@@ -34,18 +35,21 @@ public class AddNoiseProcess extends MigratableProcess {
 				out.println(noise);
 				
 				try {
-					Thread.sleep(2000);
+					Thread.sleep(3000);
 				} catch (InterruptedException e) {
 					// ignore it
 				}
 			}
-		} catch (EOFException e) {
+		} catch (Exception e) {
 			// End of File
-		} catch (IOException e) {
-			System.out.println("GrepProcess: Error: " + e);
-		}
+		} 
 		out.close();
 		suspending = false;
+	}
+
+	@Override
+	String getName() {
+		return name;
 	}
 
 }

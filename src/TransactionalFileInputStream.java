@@ -6,16 +6,17 @@ import java.io.Serializable;
 
 public class TransactionalFileInputStream extends InputStream implements Serializable {
 
-    private int offset;
+	private static final long serialVersionUID = 1L;
+
+	private int offset;
     private String filename;
 
-    /* "Cache" the connection in FileInputStream */
+    // "Cache" the connection in FileInputStream 
     private transient FileInputStream mInput;
 
     public TransactionalFileInputStream(String fname) {
     	offset = 0;
     	filename = fname;
-
     	try {
     	    mInput = new FileInputStream(filename);
     	} catch (FileNotFoundException e) {
@@ -26,11 +27,11 @@ public class TransactionalFileInputStream extends InputStream implements Seriali
     @Override
     public int read() throws IOException {
     	if (mInput == null) {
-    		System.out.println("FileInputStream reset! Start new one, with offset: " + offset);
+    		System.out.println("FileInputStream reset! Start new one, with offset:" + offset);
     		mInput = new FileInputStream(filename);
     		mInput.skip(offset);
     	}
-	
+    	
     	offset++;
     	return mInput.read();
     }

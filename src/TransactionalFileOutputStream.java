@@ -11,10 +11,11 @@ import java.nio.channels.FileChannel;
  */
 public class TransactionalFileOutputStream extends OutputStream implements Serializable {
 
-    
-    private String filename;
+	private static final long serialVersionUID = 1L;
 
-    /* "Cache" the connection in FileInputStream */
+	private String filename;
+
+    // "Cache" the connection in FileInputStream 
     private transient FileOutputStream mOutput;
 
     public TransactionalFileOutputStream(String fname) {
@@ -23,7 +24,6 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     	try {
     	    mOutput = new FileOutputStream(filename,true);
     	} catch (FileNotFoundException e) {
-    	    // TODO Auto-generated catch block
     	    e.printStackTrace();
     	}
     }
@@ -33,10 +33,11 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     	if (mOutput == null) {
     		mOutput = new FileOutputStream(filename, true);
     	}
-    	System.out.println("TransactionFileOutput: reopen");
+
 		mOutput = new FileOutputStream(filename, true);
     	mOutput.write(arg0);
     }
+    
     @Override
 	public void close () throws IOException {
     	mOutput.close();
