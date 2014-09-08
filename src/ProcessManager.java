@@ -136,7 +136,7 @@ public class ProcessManager implements Client.ThreadFinishListener{
 	@Override
 	public void onThreadFinish(MigratableProcess mp) {
 		System.out.println("Finished " + "\"" + mp.getName() + "\"" +" from node: " + nodeIP[mp2ip.get(mp)]);
-		nodeusage[mp2ip.get(mp)-1] --;
+		nodeusage[mp2ip.get(mp)] --;
 		//allObj.remove(mp);
 		int mpIdx = allObj.indexOf(mp);
 		mpState.set(mpIdx, processState.Finished);
