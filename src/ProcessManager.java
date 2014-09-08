@@ -16,11 +16,12 @@ public class ProcessManager implements Client.ThreadFinishListener{
 
 	/*
 	 * Hard-coded node's IP address
-	 * 128.2.100.187 -> ghc54
+	 * 
 	 * 128.2.100.188 -> ghc55 (node 0)
 	 * 128.2.100.189 -> ghc56 (node 1)
+	 * 128.2.100.187 -> ghc54
 	 */
-	private String[] nodeIP = { "128.2.100.187", "128.2.100.188", "128.2.100.189" };
+	private String[] nodeIP = { "128.2.100.188", "128.2.100.189", "128.2.100.187"};
 	private int processNum;
 	
 	//store existing threads and their corresponding numbers
@@ -78,9 +79,9 @@ public class ProcessManager implements Client.ThreadFinishListener{
 			mpObj.remove(m);
 			migraObj.remove((Integer)procNum);
 			
-			int ipidx = nodeusage[0] <= nodeusage[1]? 1: 2; 
+			int ipidx = nodeusage[0] <= nodeusage[1]? 0: 1; 
 			String targetIP = nodeIP[ipidx];
-			nodeusage[ipidx-1] ++;
+			nodeusage[ipidx] ++;
 			mp2ip.put(m, ipidx);
 			
 			System.out.println("Automatically migarte " + "\"" + m.getName() + "\"" +" to node:" + targetIP);
@@ -105,7 +106,7 @@ public class ProcessManager implements Client.ThreadFinishListener{
 	@Override
 	public void onThreadFinish(MigratableProcess mp) {
 		System.out.println("Finished " + "\"" + mp.getName() + "\"" +" from node: " + nodeIP[mp2ip.get(mp)]);
-		nodeusage[mp2ip.get(mp)-1] --;
+		nodeusage[mp2ip.get(mp)] --;
 		allObj.remove(mp);
 		
 			
@@ -124,10 +125,12 @@ public class ProcessManager implements Client.ThreadFinishListener{
 	}
 	
 	public void printStatus () {
+		System.out.println("Current process:");
 		for (int i = 0; i < mpObj.size(); i++) {
 			System.out.println(mpObj.get(i).getName());
 		}
 	}
+	
 	
 	// Main program
 	public static void main(String[] args) throws Exception {
