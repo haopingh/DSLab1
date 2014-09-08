@@ -6,6 +6,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class ProcessManager implements Client.ThreadFinishListener{
 	
@@ -16,17 +17,18 @@ public class ProcessManager implements Client.ThreadFinishListener{
 	/*
 	 * Hard-coded node's IP address
 	 * 128.2.100.187 -> ghc54
-	 * 128.2.100.188 -> ghc55
-	 * 128.2.100.189 -> ghc56
+	 * 128.2.100.188 -> ghc55 (node 0)
+	 * 128.2.100.189 -> ghc56 (node 1)
 	 */
 	private String[] nodeIP = { "128.2.100.187", "128.2.100.188", "128.2.100.189" };
 	private int processNum;
 	
 	//store existing threads and their corresponding numbers
 	ArrayList<MigratableProcess> mpObj;
+	ArrayList<MigratableProcess> allObj;
 	ArrayList<Integer> migraObj;
-	
-
+	int [] nodeusage;
+	HashMap <MigratableProcess, Integer> mp2ip;
 	
 	public ProcessManager() {
 		//Bind port to this program, so other nodes can connect to here 
@@ -42,41 +44,54 @@ public class ProcessManager implements Client.ThreadFinishListener{
 		
 		// Initialize threads management elements
 		mpObj = new ArrayList<MigratableProcess>();
+		allObj = new ArrayList<MigratableProcess>();
 		migraObj = new ArrayList<Integer>();
+	
+		nodeusage = new int [2];
+		mp2ip = new HashMap <MigratableProcess, Integer>();
 		processNum = 0;
 	}
 
 	public void launch(MigratableProcess mp) {
 		mpObj.add(mp);
-		migraObj.add(processNum); //TODO should modify this, should be able to handle adding new process after migration
+		allObj.add(mp);
+		migraObj.add(processNum);
 		processNum++;
 		Thread t = new Thread(mp);
 		t.start();
-		
 	}
 
 	// migrate method
 	public void migrate() {
-		System.out.print("Choose which process you want to migrate:");
+		System.out.println("Choose which process you want to migrate:");
 		
 		for (int i = 0; i < migraObj.size(); i++)
-			System.out.print(" " + migraObj.get(i));
+			System.out.println(migraObj.get(i) + ": "  + mpObj.get(i).getName());
 		System.out.println();
 		
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		try {
 			int procNum = Integer.parseInt(br.readLine());
-			migraObj.remove(procNum);
-			MigratableProcess m = mpObj.get(procNum);
-
+			
+			
+			MigratableProcess m = mpObj.get(migraObj.indexOf((Integer)procNum));
+			mpObj.remove(m);
+			migraObj.remove((Integer)procNum);
+			
+			int ipidx = nodeusage[0] <= nodeusage[1]? 1: 2; 
+			String targetIP = nodeIP[ipidx];
+			nodeusage[ipidx-1] ++;
+			mp2ip.put(m, ipidx);
+			
+			System.out.println("Automatically migarte " + "\"" + m.getName() + "\"" +" to node:" + targetIP);
 			m.suspend();
-			String targetIP = nodeIP[1];
+			
 	        
 	        Socket otherNodeSocket = new Socket(targetIP, port);
 	        Client mClient = new Client(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
 
-	        System.out.println("start transmission");
+	        System.out.println("Start transmission");
 	        mClient.setListener(this);
 
             Thread t = new Thread(mClient);
@@ -89,14 +104,11 @@ public class ProcessManager implements Client.ThreadFinishListener{
 
 	@Override
 	public void onThreadFinish(MigratableProcess mp) {
-		System.out.println("\"Finished " + mp.getName() + "\"" +" from node:");
-		
-		int index = mpObj.indexOf(mp);
-		migraObj.remove(index);
-		mpObj.remove(mp);
+		System.out.println("Finished " + "\"" + mp.getName() + "\"" +" from node: " + nodeIP[mp2ip.get(mp)]);
+		nodeusage[mp2ip.get(mp)-1] --;
+		allObj.remove(mp);
 		
 			
-		
 		/*
 		System.out.println("Current Process: ");
 		for(int i = 0; i < mpObj.size(); i++) 
@@ -136,6 +148,7 @@ public class ProcessManager implements Client.ThreadFinishListener{
 			} else if (commandArr[0].equals("ps")) {
 				mManager.printStatus();
 			} else {
+				//TODO need to handle exception?
 				// instantiate an object, using reflection in JAVA
 				Class<?> myClass = Class.forName(commandArr[0]);
 				Constructor<?> myCons = myClass.getConstructor(String[].class);

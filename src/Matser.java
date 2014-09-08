@@ -18,7 +18,7 @@ public class Matser implements Runnable {
     	    try {
     		Socket clientConnect = mServer.accept();
 
-    		System.out.println("Get Connection");
+    		System.out.println("Get connection");
     		MasterService eachConnection = new MasterService(clientConnect);
 
     		Thread connectionThread = new Thread(eachConnection);
