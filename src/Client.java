@@ -1,15 +1,14 @@
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class MigrateClient implements Runnable {
+public class Client implements Runnable {
     private Socket mSocket;
     private MigratableProcess mp;
     
     private ThreadFinishListener mListener;
 
-    public MigrateClient(Socket s) {
+    public Client(Socket s) {
     	mSocket = s;
     }
 
@@ -18,18 +17,18 @@ public class MigrateClient implements Runnable {
     	
     	try {
     	    ObjectOutputStream out = new ObjectOutputStream(mSocket.getOutputStream());
-
-    	    System.out.println("MigrateClient: Start Transmission");
+    	    
     	    if (mp != null) {
     	    	out.writeObject((Object)mp);
     	    	out.flush();
-    	    	System.out.println("MigrateClient: Finish Transmission");
+    	    	System.out.println("Finish transmission");
     	    	
+    	    	//wait for response from other nodes
     	    	ObjectInputStream in = new ObjectInputStream(mSocket.getInputStream());
+    	    	
     	    	while(true){
     	    		Object response = in.readObject();
-    	    		if (response instanceof String && ((String)response).equals("OK")) {
-    	    			System.out.println("Get Process Response: OK");
+    	    		if (response instanceof String && ((String)response).equals("Finished running")) {
     	    			mListener.onThreadFinish(mp);
     	    			break;
     	    		}

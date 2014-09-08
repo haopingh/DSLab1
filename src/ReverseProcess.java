@@ -6,13 +6,14 @@ import java.io.PrintStream;
 
 public class ReverseProcess extends MigratableProcess{
 
-
+	
+	
 	public ReverseProcess(String args[]) throws Exception {
 		if (args.length != 2) {
 			System.out.println("usage: ReverseProcess <inputFile> <outputFile>");
 			throw new Exception("Invalid Arguments");
 		}
-		
+		name = "ReverseProcess " + args[0] + " " + args[1];
 		inFile = new TransactionalFileInputStream(args[0]);
 		outFile = new TransactionalFileOutputStream(args[1]);
 	}
@@ -33,18 +34,23 @@ public class ReverseProcess extends MigratableProcess{
 				out.println(new StringBuilder(line).reverse().toString());
 				
 				try {
-					Thread.sleep(500);
+					Thread.sleep(1000);
 				} catch (InterruptedException e) {
 					// ignore it
 				}
 			}
-		} catch (EOFException e) {
+		} catch (Exception e) {
 			// End of File
-		} catch (IOException e) {
-			System.out.println("GrepProcess: Error: " + e);
-		}
+		} 
+		
 		out.close();
 		suspending = false;
+	}
+
+
+	@Override
+	String getName() {
+		return name;
 	}
 
 }

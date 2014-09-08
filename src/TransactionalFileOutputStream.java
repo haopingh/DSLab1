@@ -9,10 +9,11 @@ import java.io.Serializable;
  */
 public class TransactionalFileOutputStream extends OutputStream implements Serializable {
 
-    
-    private String filename;
+	private static final long serialVersionUID = 1L;
 
-    /* "Cache" the connection in FileInputStream */
+	private String filename;
+
+    // "Cache" the connection in FileInputStream 
     private transient FileOutputStream mOutput;
 
     public TransactionalFileOutputStream(String fname) {
@@ -21,14 +22,12 @@ public class TransactionalFileOutputStream extends OutputStream implements Seria
     	try {
     	    mOutput = new FileOutputStream(filename,true);
     	} catch (FileNotFoundException e) {
-    	    // TODO Auto-generated catch block
     	    e.printStackTrace();
     	}
     }
 
     @Override
     public void write(int arg0) throws IOException {
-    	
     	if (mOutput == null) {
     		mOutput = new FileOutputStream(filename, true);
     	}

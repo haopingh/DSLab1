@@ -7,42 +7,52 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ProcessManager implements MigrateClient.ThreadFinishListener{
-	/* Server Socket, always waiting for other's connection */
+public class ProcessManager implements Client.ThreadFinishListener{
+	
 
-	/* Port for Listening other connection */
+	//port used to listen to connections 
 	private static final int port = 5566;
 
 	/*
-	 * Maintain other nodes address (Hard-coded) 187 -> ghc54, 188 -> ghc55
+	 * Hard-coded node's IP address
+	 * 128.2.100.187 -> ghc54
+	 * 128.2.100.188 -> ghc55
+	 * 128.2.100.189 -> ghc56
 	 */
-	private String[] nodeIP = { "128.2.100.187", "128.2.100.188" };
-
-	/* Data Structure to store existing threads */
+	private String[] nodeIP = { "128.2.100.187", "128.2.100.188", "128.2.100.189" };
+	private int processNum;
+	
+	//store existing threads and their corresponding numbers
 	ArrayList<MigratableProcess> mpObj;
 	ArrayList<Integer> migraObj;
+	
 
+	
 	public ProcessManager() {
-		/* Bind Port to this program, so other node can connect to here */
+		//Bind port to this program, so other nodes can connect to here 
 		try {
 			ServerSocket mServer = new ServerSocket(port); //server
-			MigrateMatser mMaster = new MigrateMatser(this, mServer);
-			Thread t = new Thread(mMaster);
-			t.start();
+			Matser mMaster = new Matser(mServer);
+			Thread t = new Thread(mMaster);  
+			t.start(); //keep listening to this port
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		/* Initialize threads management elements */
+		
+		// Initialize threads management elements
 		mpObj = new ArrayList<MigratableProcess>();
 		migraObj = new ArrayList<Integer>();
+		processNum = 0;
 	}
 
 	public void launch(MigratableProcess mp) {
 		mpObj.add(mp);
-		migraObj.add(mpObj.size() - 1); //TODO should modify this, should be able to handle adding new process after migration 
+		migraObj.add(processNum); //TODO should modify this, should be able to handle adding new process after migration
+		processNum++;
 		Thread t = new Thread(mp);
 		t.start();
+		
 	}
 
 	// migrate method
@@ -63,11 +73,10 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 			String targetIP = nodeIP[1];
 	        
 	        Socket otherNodeSocket = new Socket(targetIP, port);
-	        MigrateClient mClient = new MigrateClient(otherNodeSocket);
+	        Client mClient = new Client(otherNodeSocket);
 	        mClient.setTransmitProcess(m);
 
 	        System.out.println("start transmission");
-
 	        mClient.setListener(this);
 
             Thread t = new Thread(mClient);
@@ -80,13 +89,19 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 
 	@Override
 	public void onThreadFinish(MigratableProcess mp) {
-		System.out.println("remove a process: " + mp.getClass().toString());
+		System.out.println("\"Finished " + mp.getName() + "\"" +" from node:");
 		
+		int index = mpObj.indexOf(mp);
+		migraObj.remove(index);
 		mpObj.remove(mp);
 		
+			
+		
+		/*
 		System.out.println("Current Process: ");
 		for(int i = 0; i < mpObj.size(); i++) 
 			System.out.print(" " + migraObj.get(i));
+			*/
 	}
 	
 	// read command at runtime
@@ -95,15 +110,17 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 		String a = br.readLine();
 		return a;
 	}
-
 	
-	/*
-	 * Here Start the Main Program The main program has a ProcessManager object
-	 * to do connection, create process, migrate process...
-	 */
+	public void printStatus () {
+		for (int i = 0; i < mpObj.size(); i++) {
+			System.out.println(mpObj.get(i).getName());
+		}
+	}
+	
+	// Main program
 	public static void main(String[] args) throws Exception {
 
-		/* Create ProcessManager object to handle different commands */
+		// Create ProcessManager object to handle different commands 
 		ProcessManager mManager = new ProcessManager();
 
 		while (true) {
@@ -116,7 +133,10 @@ public class ProcessManager implements MigrateClient.ThreadFinishListener{
 				mManager.migrate();
 			} else if (commandArr[0].equals("exit")) {
 				System.exit(0);
-			} else {// instantiate an object, using reflection in JAVA
+			} else if (commandArr[0].equals("ps")) {
+				mManager.printStatus();
+			} else {
+				// instantiate an object, using reflection in JAVA
 				Class<?> myClass = Class.forName(commandArr[0]);
 				Constructor<?> myCons = myClass.getConstructor(String[].class);
 				Object object = myCons.newInstance((Object) argsArr);

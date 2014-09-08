@@ -8,12 +8,14 @@ import java.lang.InterruptedException;
 public class GrepProcess extends MigratableProcess {
 
 	private String query;
-
+	
+	
 	public GrepProcess(String args[]) throws Exception {
 		if (args.length != 3) {
 			System.out.println("usage: GrepProcess <queryString> <inputFile> <outputFile>");
 			throw new Exception("Invalid Arguments");
 		}
+		name = "GrepProcess " + args[0] + " " + args[1] + " " + args[2];
 		query = args[0];
 		inFile = new TransactionalFileInputStream(args[1]);
 		outFile = new TransactionalFileOutputStream(args[2]);
@@ -55,6 +57,11 @@ public class GrepProcess extends MigratableProcess {
 		}
 		out.close();
 		suspending = false;
+	}
+
+	@Override
+	String getName() {
+		return name;
 	}
 
 }

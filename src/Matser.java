@@ -2,13 +2,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class MigrateMatser implements Runnable {
+public class Matser implements Runnable {
 
-    private ProcessManager mManager;
+    
     private ServerSocket mServer;
 
-    public MigrateMatser(ProcessManager pm, ServerSocket s) {
-    	mManager = pm;
+    public Matser(ServerSocket s) {
     	mServer = s;
     }
 
@@ -19,9 +18,8 @@ public class MigrateMatser implements Runnable {
     	    try {
     		Socket clientConnect = mServer.accept();
 
-    		System.out.println("MigrateMaster: Get Connection");
-    		
-    		MigrateMasterService eachConnection = new MigrateMasterService(clientConnect);
+    		System.out.println("Get Connection");
+    		MasterService eachConnection = new MasterService(clientConnect);
 
     		Thread connectionThread = new Thread(eachConnection);
     		connectionThread.start();
