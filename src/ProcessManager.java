@@ -76,7 +76,7 @@ public class ProcessManager implements Client.ThreadFinishListener{
 		//System.out.println("Before Choosing, remove finished threads");
 		removeFinishedThread();
 		if (mpObj.size() == 0) {
-			System.out.println("No process available for migration!");
+			System.out.println("No process is available for migration!");
 			return;
 		}
 			
