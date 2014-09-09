@@ -75,6 +75,11 @@ public class ProcessManager implements Client.ThreadFinishListener{
 	public void migrate() {
 		//System.out.println("Before Choosing, remove finished threads");
 		removeFinishedThread();
+		if (mpObj.size() == 0) {
+			System.out.println("No process available for migration!");
+			return;
+		}
+			
 		
 		System.out.println("Choose which process you want to migrate:");
 		
@@ -190,10 +195,18 @@ public class ProcessManager implements Client.ThreadFinishListener{
 			} else {
 				//TODO need to handle exception?
 				// instantiate an object, using reflection in JAVA
-				Class<?> myClass = Class.forName(commandArr[0]);
-				Constructor<?> myCons = myClass.getConstructor(String[].class);
-				Object object = myCons.newInstance((Object) argsArr);
-				mManager.launch((MigratableProcess) object);
+				try {
+					Class<?> myClass = Class.forName(commandArr[0]);
+					Constructor<?> myCons = myClass.getConstructor(String[].class);
+					Object object = myCons.newInstance((Object) argsArr);
+					mManager.launch((MigratableProcess) object);
+				} catch (ClassNotFoundException e) {
+					System.out.println("Class Not Found!");
+				} catch (Exception e) {
+					System.out.println("Wrong Argument");
+				}
+				
+				
 			}
 		}
 	}

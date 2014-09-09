@@ -23,7 +23,6 @@ public class AddNoiseProcess extends MigratableProcess {
 	public void run() {
 		PrintStream out = new PrintStream(outFile);
 		DataInputStream in = new DataInputStream(inFile);
-		out.println("node starts running");
 		try {
 			while (!suspending) {
 				String line = in.readLine();

@@ -24,7 +24,6 @@ public class GrepProcess extends MigratableProcess {
 	public void run() {
 		PrintStream out = new PrintStream(outFile);
 		DataInputStream in = new DataInputStream(inFile);
-		out.println("node starts running");
 		try {
 			while (!suspending) {
 				
@@ -53,7 +52,7 @@ public class GrepProcess extends MigratableProcess {
 			outFile.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		out.close();
 		suspending = false;
