@@ -165,11 +165,11 @@ public class ProcessManager implements Client.ThreadFinishListener{
 		for (int i = 0; i < allObj.size(); i++) {
 			if (mpState.get(i) == processState.Migrated)
 				System.out.println("Process " + i + "   " + 
-							allObj.get(i).getClass().toString() + " " + mpState.get(i).toString() + 
+							allObj.get(i).getName() + " " + mpState.get(i).toString() + 
 							":node " + nodeIP[mp2ip.get(allObj.get(i))]);
 			else
 				System.out.println("Process " + i + "   " + 
-							allObj.get(i).getClass().toString() + " " + mpState.get(i).toString());
+							allObj.get(i).getName() + " " + mpState.get(i).toString());
 		}
 	}
 	
