@@ -69,6 +69,7 @@ public class ProcessManager implements Client.ThreadFinishListener{
 		Thread t = new Thread(mp);
 		threadInMaster.add(t);
 		t.start();
+		
 	}
 
 	// migrate method
